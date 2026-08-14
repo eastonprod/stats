@@ -65,6 +65,11 @@ public struct Network_wifi: Codable {
         self.channelWidth = nil
         self.channelNumber = nil
     }
+
+    public static func normalizeSSID(_ ssid: String?) -> String? {
+        guard let ssid, !ssid.isEmpty, ssid != "<redacted>" else { return nil }
+        return ssid
+    }
 }
 
 public struct Bandwidth: Codable {

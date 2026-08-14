@@ -412,17 +412,15 @@ internal class UsageReader: Reader<Network_Usage>, CWEventDelegate {
             self.usage.wifiDetails.reset()
         }
         
-        if self.usage.wifiDetails.ssid != nil && (self.usage.wifiDetails.ssid == "" || self.usage.wifiDetails.ssid == "<redacted>") {
-            self.usage.wifiDetails.ssid = nil
-        }
-        
-        if self.usage.connectionType == .wifi && self.usage.wifiDetails.ssid == nil || self.usage.wifiDetails.ssid == "" {
+        self.usage.wifiDetails.ssid = Network_wifi.normalizeSSID(self.usage.wifiDetails.ssid)
+
+        if self.usage.connectionType == .wifi {
             self.getWiFiDetails()
         }
-        
+
         self.lastDetailsReadTS = Date()
     }
-    
+
     private func getWiFiDetails() {
         if let interface = CWWiFiClient.shared().interface(withName: self.interfaceID) {
             if let ssid = interface.ssid() {
